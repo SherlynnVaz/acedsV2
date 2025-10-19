@@ -44,18 +44,12 @@ export default function RegisterPage() {
       if (data?.user) {
         try {
           localStorage.setItem("user", JSON.stringify(data.user))
-        } catch {}
+        } catch { }
       }
 
       // Support redirecting back to protected page like the login flow
-      const cookies = document.cookie.split(';')
-      const redirectCookie = cookies.find(cookie => cookie.trim().startsWith('redirectTo='))
-      const redirectUrl = redirectCookie ? decodeURIComponent(redirectCookie.split('=')[1]) : '/dashboard'
-      // Clear the redirect cookie
-      document.cookie = 'redirectTo=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
-
-      // Redirect immediately
-      router.push(redirectUrl)
+      // Always redirect to dashboard after registration
+      router.push('/dashboard')
     } catch (err: any) {
       setError(err.message)
     } finally {
