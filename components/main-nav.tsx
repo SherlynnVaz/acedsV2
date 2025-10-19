@@ -7,16 +7,26 @@ import { Button } from "@/components/ui/button"
 import { BookOpen, Home, LogOut, User } from "lucide-react"
 import { useEffect, useState } from "react"
 
+
 export function MainNav() {
   const pathname = usePathname()
   const router = useRouter()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  // This effect checks localStorage to see if the user is logged in
   useEffect(() => {
+    setMounted(true)
+
     const checkAuth = () => {
       const storedUser = localStorage.getItem("user")
-      setIsLoggedIn(!!storedUser)
+      if (storedUser) {
+        setIsLoggedIn(true)
+        return
+      }
+      // Fallback: check for JWT cookie
+      const cookies = document.cookie.split(';').map(c => c.trim())
+      const hasToken = cookies.some(c => c.startsWith('token='))
+      setIsLoggedIn(hasToken)
     }
 
     checkAuth()
@@ -27,10 +37,16 @@ export function MainNav() {
     }
     window.addEventListener('storage', onStorage)
 
+    // Also check on focus (in case cookie changes in another tab)
+    window.addEventListener('focus', checkAuth)
+
     return () => {
       window.removeEventListener('storage', onStorage)
+      window.removeEventListener('focus', checkAuth)
     }
-  }, [pathname]) // Re-check on every route change
+  }, [pathname])
+
+  if (!mounted) return null
 
   const handleLogout = async () => {
     // Clear local storage
