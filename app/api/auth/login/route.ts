@@ -9,12 +9,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'AceDS-2025';
 export async function POST(req: Request) {
   try {
     await connectDB();
-    
+
     const { email, password } = await req.json();
 
     // Find user and include password for verification
     const user = await User.findOne({ email }).select('+password');
-    
+
     if (!user || !(await user.correctPassword(password, user.password))) {
       return NextResponse.json(
         { error: 'Invalid email or password' },
@@ -36,7 +36,8 @@ export async function POST(req: Request) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 // 7 days
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: '/',
     });
 
     return NextResponse.json({

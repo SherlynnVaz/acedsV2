@@ -9,7 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'AceDS-2025';
 export async function POST(req: Request) {
   try {
     await connectDB();
-    
+
     const { name, email, password } = await req.json();
 
     // Check if user already exists
@@ -42,7 +42,8 @@ export async function POST(req: Request) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 // 7 days
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: '/',
     });
 
     return NextResponse.json({
