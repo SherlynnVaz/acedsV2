@@ -1,0 +1,12 @@
+/* ...existing code... */
+pre {
+    background: #111 !important;
+    /* Match your website bg */
+    color: #fff !important;
+    border-radius: 8px;
+    padding: 1em;
+    font-size: 1em;
+    overflow-x: auto;
+}
+
+/* ...existing code... */
